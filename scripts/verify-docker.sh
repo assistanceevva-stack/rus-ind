@@ -23,9 +23,9 @@ fi
 
 # 2) API health (через nginx proxy)
 echo "2) GET $BASE_URL/api/health → JSON (200)"
-RESP=$(curl -s -w "\n%{http_code}" "$BASE_URL/api/health" 2>/dev/null || echo -e "\n000")
+RESP=$(curl -s -w "\n%{http_code}" "$BASE_URL/api/health" 2>/dev/null || printf '\n000')
 STATUS=$(echo "$RESP" | tail -1)
-BODY=$(echo "$RESP" | head -n -1)
+BODY=$(echo "$RESP" | sed '$d')
 if [ "$STATUS" = "200" ] && echo "$BODY" | grep -q '"ok"'; then
   echo "   OK: $STATUS, body contains ok"
 else
@@ -36,11 +36,14 @@ fi
 # 3) API context (ожидаем 200 или 400 — не 404/502)
 echo "3) GET $BASE_URL/api/context?visitorId=test → не 404/502"
 STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL/api/context?visitorId=test" 2>/dev/null || echo "000")
-if [ "$STATUS" != "404" ] && [ "$STATUS" != "502" ] && [ "$STATUS" != "000" ]; then
-  echo "   OK: $STATUS (proxy works)"
-else
+if [ "$STATUS" = "000" ]; then
+  echo "   FAIL: connection refused (запустите docker compose up -d)"
+  FAILED=1
+elif [ "$STATUS" = "404" ] || [ "$STATUS" = "502" ]; then
   echo "   FAIL: got $STATUS (proxy or backend issue)"
   FAILED=1
+else
+  echo "   OK: $STATUS (proxy works)"
 fi
 
 # 4) Backend logs (если docker compose доступен)
