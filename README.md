@@ -77,7 +77,7 @@ docker compose build && docker compose up -d
 
 **Переменные:** `backend/.env` — для backend (Sheets и др.). Фронт собирается с `VITE_API_URL=""` (относительные URL, nginx проксирует `/api`).
 
-**Проверка:** откройте фронт в браузере, откройте чат — запросы `/api/chat` идут через nginx в backend. Логи backend: `docker compose logs -f backend`.
+**Проверка:** `npm run verify:docker` — автоматизированная проверка (curl /, /api/health, /api/context). Или вручную: откройте фронт в браузере, чат — запросы `/api/chat` идут через nginx. Логи: `docker compose logs -f backend`.
 
 **Остановка:** `docker compose down`
 
@@ -94,6 +94,7 @@ docker compose build && docker compose up -d
 | `docker compose build` | корень | Сборка образов |
 | `docker compose up -d` | корень | Запуск контейнеров |
 | `docker compose down` | корень | Остановка контейнеров |
+| `npm run verify:docker` | корень | Проверка Docker (после up -d) |
 
 ## Проверки (CI и pre-commit)
 
@@ -135,3 +136,4 @@ docker compose build && docker compose up -d
 - `ИНСТРУКЦИЯ-НАСТРОЙКА-CURSOR.md` — настройка Cursor IDE для автозапуска команд.
 - `docs/phase2-lite-report.md` — отчёт по E2E тестам Playwright и CI.
 - `docs/docker-decisions.md` — решения по Docker Compose.
+- `docs/docker-verification-report.md` — проверка nginx proxy и Docker.
