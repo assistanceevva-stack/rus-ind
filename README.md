@@ -180,3 +180,5 @@ docker compose build && docker compose up -d
 - `docs/phase2-lite-report.md` — отчёт по E2E тестам Playwright и CI.
 - `docs/docker-decisions.md` — решения по Docker Compose.
 - `docs/docker-verification-report.md` — проверка nginx proxy и Docker.
+
+<!-- branch protection test -->
