@@ -124,13 +124,55 @@ docker compose build && docker compose up -d
 
 ## Branch protection (GitHub)
 
-Рекомендуемые настройки для ветки `main` (Settings → Branches → Add rule):
+### Ожидаемые статус-чеки (Required checks)
 
-- [ ] **Require a pull request before merging** — запрет прямого push в main
-- [ ] **Require status checks to pass before merging** — CI должен пройти
-  - Добавить в список: `frontend`, `backend`, `e2e`, `docker` (названия jobs из `.github/workflows/ci.yml`)
-- [ ] **Require branches to be up to date before merging** — PR должен быть актуален
-- [ ] **Do not allow bypassing the above settings** — для админов тоже
+После push в `main` в GitHub Actions появятся следующие checks (имена = имена jobs из `.github/workflows/ci.yml`):
+
+| Check | Описание |
+|-------|----------|
+| `frontend` | Lint + build фронта |
+| `backend` | Lint бэкенда |
+| `e2e` | E2E тесты Playwright |
+| `docker` | Docker Compose smoke test |
+
+### Пошаговая инструкция: включить branch protection для main
+
+1. Откройте репозиторий на GitHub: https://github.com/assistanceevva-stack/rus-ind
+2. **Settings** → **Branches** (левое меню)
+3. **Add rule** (или **Add branch protection rule**)
+4. В поле **Branch name pattern** введите: `main`
+5. Включите опции:
+   - [x] **Require a pull request before merging**
+     - (опционально) Require approvals: 1
+   - [x] **Require status checks to pass before merging**
+     - Нажмите **Add status checks** и добавьте по одному (именно так, как в UI):
+       - `frontend`
+       - `backend`
+       - `e2e`
+       - `docker`
+     - Важно: чеки появятся в списке только после того, как хотя бы один workflow run завершился (после push в main)
+   - [x] **Require branches to be up to date before merging**
+   - [x] **Do not allow bypassing the above settings**
+   - (опционально) [ ] **Require conversation resolution before merging**
+6. **Create** (или **Save changes**)
+
+### Как проверить, что правила работают
+
+1. Создайте тестовую ветку: `git checkout -b test-branch-protection`
+2. Сделайте любое изменение (например, добавьте пустую строку в README) и закоммитьте
+3. Push: `git push origin test-branch-protection`
+4. Создайте Pull Request в main на GitHub
+5. Убедитесь, что:
+   - Merge заблокирован до прохождения всех checks (frontend, backend, e2e, docker)
+   - После прохождения всех checks кнопка Merge станет активной
+6. Закройте PR без merge, удалите ветку: `git checkout main && git branch -d test-branch-protection && git push origin --delete test-branch-protection`
+
+### Проверка после push: убедиться, что Actions запустились
+
+1. Откройте https://github.com/assistanceevva-stack/rus-ind/actions
+2. Должен появиться новый workflow run (CI) — обычно вверху списка
+3. Нажмите на run — должны быть 4 jobs: frontend, backend, e2e, docker
+4. Статусы появятся в PR и на странице коммита (зелёные галочки / жёлтые кружки / красные крестики)
 
 ## Документация
 
