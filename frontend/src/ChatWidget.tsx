@@ -27,7 +27,7 @@ type TechSpec = {
   erpExists?: boolean;
 };
 
-const API_BASE = "http://localhost:3001";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
 function getAvatar(role: Role, state: AvatarState) {
   return `/avatars/${role}-${state}.png`;
@@ -92,8 +92,10 @@ function offlineAI(text: string, role: Role) {
     );
   }
 
-  if (role === "engineer") return "Ок. Дайте 2–3 параметра — я соберу конфигурацию.";
-  if (role === "consultant") return "Ок. Уточним масштабы и сроки — предложу варианты.";
+  if (role === "engineer")
+    return "Ок. Дайте 2–3 параметра — я соберу конфигурацию.";
+  if (role === "consultant")
+    return "Ок. Уточним масштабы и сроки — предложу варианты.";
   return "Ок. Давайте быстро уточним симптомы и код ошибки.";
 }
 
@@ -111,7 +113,9 @@ export default function ChatWidget() {
   const [menu, setMenu] = useState<MenuLevel>("root");
 
   // активная ветка диалога (для “умных вопросов”)
-  const [topic, setTopic] = useState<"unknown" | "equipment" | "software" | "service" | "design">("unknown");
+  const [topic, setTopic] = useState<
+    "unknown" | "equipment" | "software" | "service" | "design"
+  >("unknown");
 
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -170,7 +174,10 @@ export default function ChatWidget() {
   }
 
   // typewriter для ассистента
-  function addAssistantTyping(fullText: string, opts?: { speedMs?: number; initialDelayMs?: number }) {
+  function addAssistantTyping(
+    fullText: string,
+    opts?: { speedMs?: number; initialDelayMs?: number }
+  ) {
     const speedMs = clamp(opts?.speedMs ?? 14, 6, 30);
     const initialDelayMs = clamp(opts?.initialDelayMs ?? 120, 0, 800);
 
@@ -208,7 +215,9 @@ export default function ChatWidget() {
       if (t.includes("птиц") || t.includes("кур")) updated.product = "птица";
 
       // скорость: "120 уп/мин"
-      const speedMatch = t.match(/(\d+)\s?(уп\/мин|уп\/м|уп в мин|уп\/minute|шт\/мин|шт\/м|pcs\/min|pack\/min)/);
+      const speedMatch = t.match(
+        /(\d+)\s?(уп\/мин|уп\/м|уп в мин|уп\/minute|шт\/мин|шт\/м|pcs\/min|pack\/min)/
+      );
       if (speedMatch) updated.speed = speedMatch[0];
 
       // маркировка + MES
@@ -219,26 +228,32 @@ export default function ChatWidget() {
       else if (t.includes("mes")) updated.mes = true;
 
       // ERP
-      if (t.includes("есть erp") || t.includes("erp есть")) updated.erpExists = true;
-      if (t.includes("без erp") || t.includes("нет erp")) updated.erpExists = false;
+      if (t.includes("есть erp") || t.includes("erp есть"))
+        updated.erpExists = true;
+      if (t.includes("без erp") || t.includes("нет erp"))
+        updated.erpExists = false;
 
       // линии
       const linesMatch = t.match(/(\d+)\s?(линий|линии|line)/);
       if (linesMatch) updated.linesCount = linesMatch[0];
 
       // формат упаковки
-      if (t.includes("лоток") || t.includes("лотков")) updated.packaging = "лоток";
+      if (t.includes("лоток") || t.includes("лотков"))
+        updated.packaging = "лоток";
       if (t.includes("вакуум")) updated.packaging = "вакуум";
       if (t.includes("flow")) updated.packaging = "flow-pack";
       if (t.includes("термоформ")) updated.packaging = "термоформование";
 
       // диапазон веса
-      const w = t.match(/(\d+(\.\d+)?)\s?(г|кг)\s?(-|до)\s?(\d+(\.\d+)?)\s?(г|кг)/);
+      const w = t.match(
+        /(\d+(\.\d+)?)\s?(г|кг)\s?(-|до)\s?(\d+(\.\d+)?)\s?(г|кг)/
+      );
       if (w) updated.weightRange = w[0];
 
       // тип оборудования (по словам)
       if (t.includes("маркиров")) updated.equipmentType = "маркировка";
-      if (t.includes("вес") || t.includes("чеквейер")) updated.equipmentType = "весовое оборудование";
+      if (t.includes("вес") || t.includes("чеквейер"))
+        updated.equipmentType = "весовое оборудование";
       if (t.includes("упаков")) updated.equipmentType = "упаковка";
 
       // проблема (авария)
@@ -264,11 +279,16 @@ export default function ChatWidget() {
     if (ts.packaging) lines.push(`• упаковка: ${ts.packaging}`);
     if (ts.weightRange) lines.push(`• диапазон веса: ${ts.weightRange}`);
     if (ts.linesCount) lines.push(`• линии: ${ts.linesCount}`);
-    if (ts.erpExists !== undefined) lines.push(`• ERP: ${ts.erpExists ? "есть" : "нет"}`);
-    if (ts.marking !== undefined) lines.push(`• маркировка: ${ts.marking ? "да" : "нет"}`);
-    if (ts.mes !== undefined) lines.push(`• интеграция MES: ${ts.mes ? "да" : "нет"}`);
+    if (ts.erpExists !== undefined)
+      lines.push(`• ERP: ${ts.erpExists ? "есть" : "нет"}`);
+    if (ts.marking !== undefined)
+      lines.push(`• маркировка: ${ts.marking ? "да" : "нет"}`);
+    if (ts.mes !== undefined)
+      lines.push(`• интеграция MES: ${ts.mes ? "да" : "нет"}`);
     if (ts.problem) lines.push(`• проблема: ${ts.problem}`);
-    return lines.length ? lines.join("\n") : "Пока мало данных — напишите пару параметров (продукт/скорость/маркировка).";
+    return lines.length
+      ? lines.join("\n")
+      : "Пока мало данных — напишите пару параметров (продукт/скорость/маркировка).";
   }
 
   function showTechSpec() {
@@ -278,18 +298,27 @@ export default function ChatWidget() {
   }
 
   // ===== УМНЫЕ вопросы (ветки) =====
-  function buildNextQuestions(ts: TechSpec, currentTopic: typeof topic, currentMenu: MenuLevel) {
+  function buildNextQuestions(
+    ts: TechSpec,
+    currentTopic: typeof topic,
+    currentMenu: MenuLevel
+  ) {
     const q: string[] = [];
 
     // если тема не выбрана — аккуратно спросим
     if (currentTopic === "unknown") {
-      q.push("Ок. Это про оборудование, IT/ПО, техподдержку (авария) или проектирование?");
+      q.push(
+        "Ок. Это про оборудование, IT/ПО, техподдержку (авария) или проектирование?"
+      );
       return q;
     }
 
     // SERVICE (авария)
     if (currentTopic === "service") {
-      if (!ts.problem) q.push("Что именно остановилось (линия/весы/принтер/сканер/контроллер)?");
+      if (!ts.problem)
+        q.push(
+          "Что именно остановилось (линия/весы/принтер/сканер/контроллер)?"
+        );
       q.push("Есть код ошибки на экране? (если да — напишите как есть)");
       q.push("Что было перед сбоем: обновление, смена партии, смена настроек?");
       return q.slice(0, 4);
@@ -299,8 +328,13 @@ export default function ChatWidget() {
     if (currentTopic === "software") {
       if (ts.erpExists === undefined) q.push("ERP уже есть? (да/нет)");
       if (!ts.linesCount) q.push("Сколько линий/участков нужно подключить?");
-      if (ts.mes === undefined) q.push("Нужна MES-надстройка (учёт производства в реальном времени)? (да/нет)");
-      q.push("Нужно подключать оборудование (весы/маркировка/сканеры) к системе? (да/нет)");
+      if (ts.mes === undefined)
+        q.push(
+          "Нужна MES-надстройка (учёт производства в реальном времени)? (да/нет)"
+        );
+      q.push(
+        "Нужно подключать оборудование (весы/маркировка/сканеры) к системе? (да/нет)"
+      );
       return q.slice(0, 4);
     }
 
@@ -315,18 +349,35 @@ export default function ChatWidget() {
 
     // EQUIPMENT
     if (currentTopic === "equipment") {
-      if (!ts.equipmentType && currentMenu === "equipment") q.push("Какой тип оборудования: маркировка / весы / упаковка?");
+      if (!ts.equipmentType && currentMenu === "equipment")
+        q.push("Какой тип оборудования: маркировка / весы / упаковка?");
       if (!ts.product) q.push("Какой продукт (мясо/птица/рыба/сыр/другое)?");
-      if (!ts.speed) q.push("Скорость/производительность линии? (например 120 уп/мин)");
-      if (ts.marking === undefined && (ts.equipmentType === "маркировка" || currentMenu === "equipment_marking")) q.push("Маркировка нужна? (да/нет)");
+      if (!ts.speed)
+        q.push("Скорость/производительность линии? (например 120 уп/мин)");
+      if (
+        ts.marking === undefined &&
+        (ts.equipmentType === "маркировка" ||
+          currentMenu === "equipment_marking")
+      )
+        q.push("Маркировка нужна? (да/нет)");
       if (ts.mes === undefined) q.push("Интеграция с MES/ERP нужна? (да/нет)");
 
       // уточнения по подветкам
-      if ((currentMenu === "equipment_marking" || ts.equipmentType === "маркировка") && !ts.packaging) {
+      if (
+        (currentMenu === "equipment_marking" ||
+          ts.equipmentType === "маркировка") &&
+        !ts.packaging
+      ) {
         q.push("Какой формат упаковки (лоток/вакуум/flow-pack/термоформ)?");
       }
-      if ((currentMenu === "equipment_weight" || ts.equipmentType === "весовое оборудование") && !ts.weightRange) {
-        q.push("Диапазон веса (пример: 0.2–1.2 кг) и нужна ли контрольная точность?");
+      if (
+        (currentMenu === "equipment_weight" ||
+          ts.equipmentType === "весовое оборудование") &&
+        !ts.weightRange
+      ) {
+        q.push(
+          "Диапазон веса (пример: 0.2–1.2 кг) и нужна ли контрольная точность?"
+        );
       }
 
       return q.slice(0, 4);
@@ -358,12 +409,23 @@ export default function ChatWidget() {
   const quickChips = useMemo(() => {
     const chips: string[] = [];
 
-    if (topic === "software" && techSpec.erpExists === undefined) chips.push("ERP есть", "ERP нет");
-    if (techSpec.mes === undefined && (topic === "equipment" || topic === "software")) chips.push("MES да", "MES нет");
-    if (techSpec.marking === undefined && topic === "equipment") chips.push("Маркировка да", "Маркировка нет");
+    if (topic === "software" && techSpec.erpExists === undefined)
+      chips.push("ERP есть", "ERP нет");
+    if (
+      techSpec.mes === undefined &&
+      (topic === "equipment" || topic === "software")
+    )
+      chips.push("MES да", "MES нет");
+    if (techSpec.marking === undefined && topic === "equipment")
+      chips.push("Маркировка да", "Маркировка нет");
 
-    if (topic === "equipment" && !techSpec.equipmentType) chips.push("Маркировка", "Весы", "Упаковка");
-    if ((menu === "equipment_marking" || techSpec.equipmentType === "маркировка") && !techSpec.packaging) {
+    if (topic === "equipment" && !techSpec.equipmentType)
+      chips.push("Маркировка", "Весы", "Упаковка");
+    if (
+      (menu === "equipment_marking" ||
+        techSpec.equipmentType === "маркировка") &&
+      !techSpec.packaging
+    ) {
       chips.push("Лоток", "Вакуум", "Flow-pack", "Термоформ");
     }
 
@@ -384,7 +446,9 @@ export default function ChatWidget() {
   async function checkContext() {
     try {
       if (!visitorIdRef.current) return;
-      const res = await fetch(`${API_BASE}/api/context?visitorId=${encodeURIComponent(visitorIdRef.current)}`);
+      const res = await fetch(
+        `${API_BASE}/api/context?visitorId=${encodeURIComponent(visitorIdRef.current)}`
+      );
       const data = await res.json();
       if (data?.found && data?.message) {
         addAssistantTyping(data.message);
@@ -426,25 +490,35 @@ export default function ChatWidget() {
     if (level === "service") setTopic("service");
     if (level === "design") setTopic("design");
 
-    if (level === "equipment") addAssistantTyping("🏭 Оборудование:\n• Маркировка\n• Весы\n• Упаковка");
-    if (level === "software") addAssistantTyping("💻 IT/ПО:\n• MES\n• WMS\n• ERP\n• Интеграции");
-    if (level === "service") addAssistantTyping("🛠️ Авария/техподдержка.\nЧто перестало работать?");
-    if (level === "design") addAssistantTyping("🏗️ Проектирование.\nОпишите задачу и масштабы.");
+    if (level === "equipment")
+      addAssistantTyping("🏭 Оборудование:\n• Маркировка\n• Весы\n• Упаковка");
+    if (level === "software")
+      addAssistantTyping("💻 IT/ПО:\n• MES\n• WMS\n• ERP\n• Интеграции");
+    if (level === "service")
+      addAssistantTyping("🛠️ Авария/техподдержка.\nЧто перестало работать?");
+    if (level === "design")
+      addAssistantTyping("🏗️ Проектирование.\nОпишите задачу и масштабы.");
 
     if (level === "equipment_marking") {
       setTopic("equipment");
       setTechSpec((p) => ({ ...p, equipmentType: "маркировка" }));
-      addAssistantTyping("🔖 Маркировка. Скажите: продукт, скорость линии и формат упаковки.");
+      addAssistantTyping(
+        "🔖 Маркировка. Скажите: продукт, скорость линии и формат упаковки."
+      );
     }
     if (level === "equipment_weight") {
       setTopic("equipment");
       setTechSpec((p) => ({ ...p, equipmentType: "весовое оборудование" }));
-      addAssistantTyping("⚖️ Весы/чеквейер. Скажите диапазон веса и требуемую точность.");
+      addAssistantTyping(
+        "⚖️ Весы/чеквейер. Скажите диапазон веса и требуемую точность."
+      );
     }
     if (level === "equipment_packaging") {
       setTopic("equipment");
       setTechSpec((p) => ({ ...p, equipmentType: "упаковка" }));
-      addAssistantTyping("📦 Упаковка. Скажите продукт, формат упаковки и производительность.");
+      addAssistantTyping(
+        "📦 Упаковка. Скажите продукт, формат упаковки и производительность."
+      );
     }
   }
 
@@ -490,7 +564,9 @@ export default function ChatWidget() {
           "✅ Принял. Я отправил менеджеру ваше ТЗ и контекст.\nЕсли хотите — продолжим уточнять детали, чтобы ускорить расчёт."
         );
       } else {
-        addAssistantTyping("⚠️ Не получилось отправить менеджеру. Попробуйте ещё раз.");
+        addAssistantTyping(
+          "⚠️ Не получилось отправить менеджеру. Попробуйте ещё раз."
+        );
       }
 
       setLeadOpen(false);
@@ -498,7 +574,9 @@ export default function ChatWidget() {
       setLeadContact("");
       setLeadCity("");
     } catch {
-      addAssistantTyping("⚠️ Сервер недоступен. Запустите backend и попробуйте снова.");
+      addAssistantTyping(
+        "⚠️ Сервер недоступен. Запустите backend и попробуйте снова."
+      );
     } finally {
       setSendingLead(false);
     }
@@ -540,15 +618,21 @@ export default function ChatWidget() {
       addAssistantTyping(data.reply || offlineAI(text, role));
 
       // 2) умные вопросы (если backend не прислал — используем локальные)
-      const questions: string[] = Array.isArray(data?.nextQuestions) ? data.nextQuestions : nextQ;
+      const questions: string[] = Array.isArray(data?.nextQuestions)
+        ? data.nextQuestions
+        : nextQ;
 
       // чуть пауза, чтобы не “втыкать” в один момент
       if (questions.length) {
         setTimeout(() => {
-          addAssistantTyping("Чтобы предложить точное решение, уточню:\n• " + questions.slice(0, 4).join("\n• "), {
-            speedMs: 11,
-            initialDelayMs: 120,
-          });
+          addAssistantTyping(
+            "Чтобы предложить точное решение, уточню:\n• " +
+              questions.slice(0, 4).join("\n• "),
+            {
+              speedMs: 11,
+              initialDelayMs: 120,
+            }
+          );
         }, 600);
       }
 
@@ -565,11 +649,16 @@ export default function ChatWidget() {
       setAvatarState("idle");
 
       // офлайн: ответ + вопросы
-      addAssistantTyping("⚠️ Сейчас я работаю в автономном режиме.\n\n" + offlineAI(text, role));
+      addAssistantTyping(
+        "⚠️ Сейчас я работаю в автономном режиме.\n\n" + offlineAI(text, role)
+      );
 
       if (nextQ.length) {
         setTimeout(() => {
-          addAssistantTyping("Чтобы предложить точное решение, уточню:\n• " + nextQ.slice(0, 4).join("\n• "));
+          addAssistantTyping(
+            "Чтобы предложить точное решение, уточню:\n• " +
+              nextQ.slice(0, 4).join("\n• ")
+          );
         }, 700);
       }
 
@@ -602,7 +691,9 @@ export default function ChatWidget() {
                 className="w-10 h-10 rounded-full border border-white/20 object-cover"
                 alt="avatar"
               />
-              <div className="font-semibold text-white">AI ассистент РУС-ИНДУСТРИИ</div>
+              <div className="font-semibold text-white">
+                AI ассистент РУС-ИНДУСТРИИ
+              </div>
             </div>
             <button
               onClick={() => setOpen(false)}
@@ -639,18 +730,30 @@ export default function ChatWidget() {
           {/* МЕНЮ */}
           {roleSelected && menu === "root" && (
             <div className="px-4 py-2 flex gap-2 flex-wrap border-b border-white/10 text-sm text-white/90">
-              <button onClick={() => selectMenu("equipment")}>🏭 Оборудование</button>
-              <button onClick={() => selectMenu("software")}>💻 ПО / MES / ERP</button>
+              <button onClick={() => selectMenu("equipment")}>
+                🏭 Оборудование
+              </button>
+              <button onClick={() => selectMenu("software")}>
+                💻 ПО / MES / ERP
+              </button>
               <button onClick={() => selectMenu("service")}>🛠️ Авария</button>
-              <button onClick={() => selectMenu("design")}>🏗️ Проектирование</button>
+              <button onClick={() => selectMenu("design")}>
+                🏗️ Проектирование
+              </button>
             </div>
           )}
 
           {roleSelected && menu === "equipment" && (
             <div className="px-4 py-2 flex gap-2 flex-wrap border-b border-white/10 text-sm text-white/90">
-              <button onClick={() => selectMenu("equipment_marking")}>🔖 Маркировка</button>
-              <button onClick={() => selectMenu("equipment_weight")}>⚖️ Весы</button>
-              <button onClick={() => selectMenu("equipment_packaging")}>📦 Упаковка</button>
+              <button onClick={() => selectMenu("equipment_marking")}>
+                🔖 Маркировка
+              </button>
+              <button onClick={() => selectMenu("equipment_weight")}>
+                ⚖️ Весы
+              </button>
+              <button onClick={() => selectMenu("equipment_packaging")}>
+                📦 Упаковка
+              </button>
               <button onClick={goBack}>← Назад</button>
             </div>
           )}
@@ -702,7 +805,8 @@ export default function ChatWidget() {
             {leadOpen && (
               <div className="p-2 rounded-lg bg-white/5 border border-white/10 text-white text-xs">
                 <div className="mb-2 text-white/80">
-                  Оставьте контакт — менеджер быстро ответит и пришлёт расчёт/КП.
+                  Оставьте контакт — менеджер быстро ответит и пришлёт
+                  расчёт/КП.
                 </div>
 
                 <div className="flex gap-2 mb-2">

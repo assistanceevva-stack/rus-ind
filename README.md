@@ -82,6 +82,12 @@ cd frontend && npm install && npm run dev
   - frontend: ESLint --fix, Prettier
   - backend: ESLint --fix
 
+## Фронтенд
+
+- Опционально `.env` в `frontend/` с переменной `VITE_API_URL` (URL бэкенда для ChatWidget).
+- Без неё используется `http://localhost:3001`. Шаблон: `frontend/.env.example`
+- Для Docker/продакшена задайте URL бэкенда при сборке.
+
 ## Бэкенд
 
 - Требуется `.env` в `backend/` с переменными: `SHEET_ID`, `GS_CLIENT_EMAIL`, `GS_PRIVATE_KEY` (для Google Sheets).
