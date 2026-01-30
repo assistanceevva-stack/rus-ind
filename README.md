@@ -7,6 +7,8 @@
 - **Фронтенд**: Vite, React 18, TypeScript, Tailwind CSS, shadcn/ui, React Router
 - **Бэкенд**: Node.js, Express 5 (чат, лиды, Google Sheets)
 
+**Node**: >=18 (см. `.nvmrc`)
+
 ## Структура проекта
 
 ```
@@ -67,12 +69,23 @@ cd frontend && npm install && npm run dev
 | `npm run dev` | frontend | Dev-сервер Vite |
 | `npm run build` | frontend | Сборка для продакшена |
 | `npm run preview` | frontend | Просмотр собранного билда |
-| `npm run lint` | frontend | ESLint |
+| `npm run lint` | frontend, backend | ESLint |
+| `npm run format` | frontend | Prettier |
+
+## Проверки (CI и pre-commit)
+
+- **GitHub Actions** — на каждый push и pull_request в main запускаются:
+  - frontend: `npm ci`, `npm run lint`, `npm run build`
+  - backend: `npm ci`, `npm run lint`
+- **Pre-commit** (husky + lint-staged) — перед каждым коммитом по изменённым файлам:
+  - frontend: ESLint --fix, Prettier
+  - backend: ESLint --fix
 
 ## Бэкенд
 
 - Требуется `.env` в `backend/` с переменными: `SHEET_ID`, `GS_CLIENT_EMAIL`, `GS_PRIVATE_KEY` (для Google Sheets).
 - Без них бэкенд запустится, но логи/лиды в таблицу не пишутся.
+- Шаблон: `backend/.env.example`
 
 ## Документация
 
