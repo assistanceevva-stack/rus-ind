@@ -1,0 +1,12 @@
+{
+  "name": "rus-ind",
+  "private": true,
+  "scripts": {
+    "start": "concurrently -n backend,frontend -c blue,green \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:backend": "cd ai-chat-backend && npm start",
+    "start:frontend": "cd smart-hub-core-main && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

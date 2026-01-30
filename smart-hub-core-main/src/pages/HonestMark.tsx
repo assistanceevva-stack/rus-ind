@@ -1180,35 +1180,34 @@ function useSectionObserver(ids: string[]) {
 
   useEffect(() => {
     const els = ids
-      .map((id) => document.getElementById(id))
-      .filter(Boolean) as HTMLElement[];
+      .map((id) => ({ id, el: document.getElementById(id) }))
+      .filter((x): x is { id: string; el: HTMLElement } => !!x.el);
     if (!els.length) return;
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))[0];
-        if (visible?.target?.id) setActive(visible.target.id);
-      },
-      { root: null, rootMargin: "-20% 0px -70% 0px", threshold: [0.1, 0.2, 0.35, 0.5, 0.75] }
-    );
-
-    els.forEach((el) => io.observe(el));
+    const updateActive = () => {
+      const triggerOffset = window.innerHeight * 0.25; // секция активна, когда её верх прошёл линию на 25% от верха экрана
+      let newActive = els[0]?.id ?? "";
+      for (let i = els.length - 1; i >= 0; i--) {
+        const rect = els[i].el.getBoundingClientRect();
+        if (rect.top <= triggerOffset) {
+          newActive = els[i].id;
+          break;
+        }
+      }
+      setActive(newActive);
+    };
 
     const onScroll = () => {
       const doc = document.documentElement;
       const h = doc.scrollHeight - doc.clientHeight;
       setProgress(h > 0 ? (doc.scrollTop / h) * 100 : 0);
+      updateActive();
     };
 
     onScroll();
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
 
-    return () => {
-      io.disconnect();
-      window.removeEventListener("scroll", onScroll);
-    };
+    return () => window.removeEventListener("scroll", onScroll);
   }, [ids]);
 
   return { active, progress };
@@ -1648,6 +1647,26 @@ const HonestMark = () => {
                       );
                     })}
                   </div>
+                </section>
+
+                {/* DataMatrix */}
+                <section id="datamatrix" className="py-2">
+                  <DataMatrixDemo />
+                </section>
+
+                {/* Cases */}
+                <section id="cases" className="py-2">
+                  <CasesDoAfter />
+                </section>
+
+                {/* Simulator */}
+                <section id="simulator" className="py-2">
+                  <SupplyChainSimulator />
+                </section>
+
+                {/* Comparison */}
+                <section id="compare" className="py-2">
+                  <ComparisonSlider />
                 </section>
 
                 {/* Risks */}
