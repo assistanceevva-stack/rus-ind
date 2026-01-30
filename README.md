@@ -61,6 +61,26 @@ cd frontend && npm install && npm run dev
 ./start.sh
 ```
 
+### Вариант 4: Docker Compose
+
+```bash
+# Перед первым запуском: создать backend/.env из шаблона
+cp backend/.env.example backend/.env
+
+# Сборка и запуск
+docker compose build && docker compose up -d
+```
+
+- Сайт: http://localhost (порт 80)
+- Чат ходит в backend через nginx proxy `/api` → backend:3001
+- Backend не публикуется наружу
+
+**Переменные:** `backend/.env` — для backend (Sheets и др.). Фронт собирается с `VITE_API_URL=""` (относительные URL, nginx проксирует `/api`).
+
+**Проверка:** откройте фронт в браузере, откройте чат — запросы `/api/chat` идут через nginx в backend. Логи backend: `docker compose logs -f backend`.
+
+**Остановка:** `docker compose down`
+
 ## Команды
 
 | Команда | Где | Описание |
@@ -71,6 +91,9 @@ cd frontend && npm install && npm run dev
 | `npm run preview` | frontend | Просмотр собранного билда |
 | `npm run lint` | frontend, backend | ESLint |
 | `npm run format` | frontend | Prettier |
+| `docker compose build` | корень | Сборка образов |
+| `docker compose up -d` | корень | Запуск контейнеров |
+| `docker compose down` | корень | Остановка контейнеров |
 
 ## Проверки (CI и pre-commit)
 
@@ -86,7 +109,7 @@ cd frontend && npm install && npm run dev
 
 - Опционально `.env` в `frontend/` с переменной `VITE_API_URL` (URL бэкенда для ChatWidget).
 - Без неё используется `http://localhost:3001`. Шаблон: `frontend/.env.example`
-- Для Docker/продакшена задайте URL бэкенда при сборке.
+- **Docker:** используется `VITE_API_URL=""` — nginx проксирует `/api` в backend, URL не нужен.
 
 ## Бэкенд
 
@@ -111,3 +134,4 @@ cd frontend && npm install && npm run dev
 
 - `ИНСТРУКЦИЯ-НАСТРОЙКА-CURSOR.md` — настройка Cursor IDE для автозапуска команд.
 - `docs/phase2-lite-report.md` — отчёт по E2E тестам Playwright и CI.
+- `docs/docker-decisions.md` — решения по Docker Compose.
