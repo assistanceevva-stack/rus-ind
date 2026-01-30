@@ -102,6 +102,7 @@ docker compose build && docker compose up -d
   - frontend: `npm ci`, `npm run lint`, `npm run build`
   - backend: `npm ci`, `npm run lint`
   - e2e: `npm ci`, `playwright install`, `npm run test:e2e` (см. [docs/phase2-lite-report.md](docs/phase2-lite-report.md))
+  - docker: `docker compose build`, `up -d`, `npm run verify:docker` — проверка Docker Compose + nginx proxy. При падении — артефакт `docker-logs`.
 - **Pre-commit** (husky + lint-staged) — перед каждым коммитом по изменённым файлам:
   - frontend: ESLint --fix, Prettier
   - backend: ESLint --fix
@@ -127,7 +128,7 @@ docker compose build && docker compose up -d
 
 - [ ] **Require a pull request before merging** — запрет прямого push в main
 - [ ] **Require status checks to pass before merging** — CI должен пройти
-  - Добавить в список: `frontend`, `backend`, `e2e` (названия jobs из `.github/workflows/ci.yml`)
+  - Добавить в список: `frontend`, `backend`, `e2e`, `docker` (названия jobs из `.github/workflows/ci.yml`)
 - [ ] **Require branches to be up to date before merging** — PR должен быть актуален
 - [ ] **Do not allow bypassing the above settings** — для админов тоже
 
