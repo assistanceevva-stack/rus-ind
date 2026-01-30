@@ -360,6 +360,10 @@ app.get("/health", (req, res) => {
   res.json({ ok: true, sheets: Boolean(sheetLogs && sheetLeads), time: nowIso() });
 });
 
+app.get("/api/health", (req, res) => {
+  res.json({ ok: true });
+});
+
 // 🔎 Debug: какие листы подключены и какие заголовки у “Логи”
 app.get("/api/debug/sheets", async (req, res) => {
   try {
