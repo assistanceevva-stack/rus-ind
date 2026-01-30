@@ -7,7 +7,7 @@
 - **Фронтенд**: Vite, React 18, TypeScript, Tailwind CSS, shadcn/ui, React Router
 - **Бэкенд**: Node.js, Express 5 (чат, лиды, Google Sheets)
 
-**Node**: >=18 (см. `.nvmrc`)
+**Node**: >=20 (см. `.nvmrc`)
 
 ## Структура проекта
 
@@ -86,6 +86,9 @@ cd frontend && npm install && npm run dev
 - Требуется `.env` в `backend/` с переменными: `SHEET_ID`, `GS_CLIENT_EMAIL`, `GS_PRIVATE_KEY` (для Google Sheets).
 - Без них бэкенд запустится, но логи/лиды в таблицу не пишутся.
 - Шаблон: `backend/.env.example`
+
+**GS_PRIVATE_KEY** (ключ из Google Cloud Console): храните в одну строку с литералом `\n` вместо переносов, например:
+`GS_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIE...\n-----END PRIVATE KEY-----\n"`
 
 ## Документация
 
