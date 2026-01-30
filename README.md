@@ -90,6 +90,16 @@ cd frontend && npm install && npm run dev
 **GS_PRIVATE_KEY** (ключ из Google Cloud Console): храните в одну строку с литералом `\n` вместо переносов, например:
 `GS_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIE...\n-----END PRIVATE KEY-----\n"`
 
+## Branch protection (GitHub)
+
+Рекомендуемые настройки для ветки `main` (Settings → Branches → Add rule):
+
+- [ ] **Require a pull request before merging** — запрет прямого push в main
+- [ ] **Require status checks to pass before merging** — CI должен пройти
+  - Добавить в список: `frontend`, `backend` (названия jobs из `.github/workflows/ci.yml`)
+- [ ] **Require branches to be up to date before merging** — PR должен быть актуален
+- [ ] **Do not allow bypassing the above settings** — для админов тоже
+
 ## Документация
 
 - `ИНСТРУКЦИЯ-НАСТРОЙКА-CURSOR.md` — настройка Cursor IDE для автозапуска команд.
