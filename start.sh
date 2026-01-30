@@ -4,11 +4,11 @@
 cd "$(dirname "$0")"
 
 echo "🚀 Запуск бэкенда (порт 3001)..."
-cd ai-chat-backend && npm start &
+cd backend && npm start &
 BACKEND_PID=$!
 
 echo "🚀 Запуск фронтенда (порт 8080)..."
-cd ../smart-hub-core-main && npm run dev &
+cd ../frontend && npm run dev &
 FRONTEND_PID=$!
 
 echo ""

@@ -122,8 +122,8 @@ cd
 После настройки попросите AI: «Запусти сайт на локалке».
 
 AI должен:
-1. Запустить бэкенд (`npm start` в папке `ai-chat-backend`).
-2. Запустить фронтенд (`npm run dev` в папке `smart-hub-core-main`).
+1. Запустить бэкенд (`npm start` в папке `backend`).
+2. Запустить фронтенд (`npm run dev` в папке `frontend`).
 3. Сообщить адреса: сайт (обычно http://localhost:8080) и API (http://localhost:3001).
 
 ---
@@ -171,13 +171,13 @@ npm start
 
 **Терминал 1 — бэкенд:**
 ```bash
-cd /Users/litovchenkoartem/Documents/rus-ind111/ai-chat-backend
+cd /Users/litovchenkoartem/Documents/rus-ind111/backend
 npm start
 ```
 
 **Терминал 2 — фронтенд:**
 ```bash
-cd /Users/litovchenkoartem/Documents/rus-ind111/smart-hub-core-main
+cd /Users/litovchenkoartem/Documents/rus-ind111/frontend
 npm run dev
 ```
 
