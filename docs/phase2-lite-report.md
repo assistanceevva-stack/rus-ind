@@ -145,18 +145,21 @@
 
 **Проблема:** Если порт 8080 занят, Vite по умолчанию выбирает другой (8081, 8082…). Playwright ожидает `http://localhost:8080`, тесты падают с неочевидной ошибкой.
 
-**Рекомендуемое решение — strictPort для E2E:**
+**Рекомендуемое решение — strictPort (сейчас не включён):**
 
-В `frontend/vite.config.ts` добавить `server.strictPort: true` (или вынести в отдельный конфиг для E2E). Тогда при занятом порте Vite завершится с явной ошибкой: *"Port 8080 is in use"* — разработчик освободит порт или поймёт причину.
-
-**Альтернатива — скрипт dev:e2e:**
-
-Добавить в `frontend/package.json`:
-```json
-"dev:e2e": "vite --port 5180"
+В `frontend/vite.config.ts` в объекте `server` добавить `strictPort: true`:
+```ts
+server: {
+  host: "0.0.0.0",
+  port: 8080,
+  strictPort: true,  // рекомендуется включить
+},
 ```
+Тогда при занятом порте Vite завершится с явной ошибкой *"Port 8080 is in use"* вместо тихого переключения на другой порт.
 
-В `playwright.config.ts` для webServer использовать `npm run dev:e2e` и `url: "http://localhost:5180"`. E2E работает на отдельном порте, без конфликта с `npm run dev` на 8080.
+**Опциональный вариант — скрипт dev:e2e (не реализован в проекте):**
+
+Если нужен отдельный порт для E2E (без конфликта с `npm run dev` на 8080), можно добавить в `frontend/package.json` скрипт `"dev:e2e": "vite --port 5180"` и в `playwright.config.ts` изменить webServer на `command: "npm run dev:e2e"`, `url: "http://localhost:5180"`, а также `baseURL: "http://localhost:5180"`. **Текущие настройки проекта — порт 8080.**
 
 ---
 
