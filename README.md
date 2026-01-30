@@ -77,6 +77,7 @@ cd frontend && npm install && npm run dev
 - **GitHub Actions** — на каждый push и pull_request в main запускаются:
   - frontend: `npm ci`, `npm run lint`, `npm run build`
   - backend: `npm ci`, `npm run lint`
+  - e2e: `npm ci`, `playwright install`, `npm run test:e2e` (см. [docs/phase2-lite-report.md](docs/phase2-lite-report.md))
 - **Pre-commit** (husky + lint-staged) — перед каждым коммитом по изменённым файлам:
   - frontend: ESLint --fix, Prettier
   - backend: ESLint --fix
@@ -96,10 +97,11 @@ cd frontend && npm install && npm run dev
 
 - [ ] **Require a pull request before merging** — запрет прямого push в main
 - [ ] **Require status checks to pass before merging** — CI должен пройти
-  - Добавить в список: `frontend`, `backend` (названия jobs из `.github/workflows/ci.yml`)
+  - Добавить в список: `frontend`, `backend`, `e2e` (названия jobs из `.github/workflows/ci.yml`)
 - [ ] **Require branches to be up to date before merging** — PR должен быть актуален
 - [ ] **Do not allow bypassing the above settings** — для админов тоже
 
 ## Документация
 
 - `ИНСТРУКЦИЯ-НАСТРОЙКА-CURSOR.md` — настройка Cursor IDE для автозапуска команд.
+- `docs/phase2-lite-report.md` — отчёт по E2E тестам Playwright и CI.
