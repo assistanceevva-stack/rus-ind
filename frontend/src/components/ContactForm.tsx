@@ -24,7 +24,9 @@ const ContactForm = () => {
     setFormData({ name: "", company: "", email: "", phone: "", message: "" });
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
@@ -38,11 +40,13 @@ const ContactForm = () => {
             {/* Left Column - Info */}
             <div className="animate-fade-up">
               <h2 className="text-3xl lg:text-4xl font-bold mb-6">
-                Запросите <span className="text-primary">коммерческое предложение</span>
+                Запросите{" "}
+                <span className="text-primary">коммерческое предложение</span>
               </h2>
               <p className="text-muted-foreground mb-8 leading-relaxed">
-                Оставьте заявку, и наши специалисты свяжутся с вами для обсуждения задач вашего предприятия
-                и подготовки индивидуального коммерческого предложения.
+                Оставьте заявку, и наши специалисты свяжутся с вами для
+                обсуждения задач вашего предприятия и подготовки индивидуального
+                коммерческого предложения.
               </p>
 
               <div className="space-y-6">
@@ -51,8 +55,13 @@ const ContactForm = () => {
                     <Phone className="text-lime" size={20} />
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">Телефон</div>
-                    <a href="tel:+78001234567" className="text-foreground hover:text-primary transition-colors font-medium">
+                    <div className="text-sm text-muted-foreground mb-1">
+                      Телефон
+                    </div>
+                    <a
+                      href="tel:+78001234567"
+                      className="text-foreground hover:text-primary transition-colors font-medium"
+                    >
                       +7 (800) 123-45-67
                     </a>
                   </div>
@@ -63,8 +72,13 @@ const ContactForm = () => {
                     <Mail className="text-lime" size={20} />
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">Email</div>
-                    <a href="mailto:info@foodtech.su" className="text-foreground hover:text-primary transition-colors font-medium">
+                    <div className="text-sm text-muted-foreground mb-1">
+                      Email
+                    </div>
+                    <a
+                      href="mailto:info@foodtech.su"
+                      className="text-foreground hover:text-primary transition-colors font-medium"
+                    >
                       info@foodtech.su
                     </a>
                   </div>
@@ -75,9 +89,12 @@ const ContactForm = () => {
                     <MapPin className="text-lime" size={20} />
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">Адрес</div>
+                    <div className="text-sm text-muted-foreground mb-1">
+                      Адрес
+                    </div>
                     <div className="text-foreground font-medium">
-                      Россия, Москва<br />
+                      Россия, Москва
+                      <br />
                       ул. Промышленная, д. 1
                     </div>
                   </div>
@@ -86,11 +103,18 @@ const ContactForm = () => {
             </div>
 
             {/* Right Column - Form */}
-            <div className="animate-fade-up" style={{ animationDelay: '0.2s' }}>
-              <form onSubmit={handleSubmit} className="bg-gradient-card border border-border rounded-2xl p-6 lg:p-8">
+            <div className="animate-fade-up" style={{ animationDelay: "0.2s" }}>
+              <form
+                onSubmit={handleSubmit}
+                className="bg-gradient-card border border-border rounded-2xl p-6 lg:p-8"
+                data-testid="contact-form"
+              >
                 <div className="space-y-4">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-foreground mb-2"
+                    >
                       Ваше имя *
                     </label>
                     <Input
@@ -105,7 +129,10 @@ const ContactForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="company" className="block text-sm font-medium text-foreground mb-2">
+                    <label
+                      htmlFor="company"
+                      className="block text-sm font-medium text-foreground mb-2"
+                    >
                       Название компании *
                     </label>
                     <Input
@@ -120,7 +147,10 @@ const ContactForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-foreground mb-2"
+                    >
                       Email *
                     </label>
                     <Input
@@ -136,7 +166,10 @@ const ContactForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-foreground mb-2">
+                    <label
+                      htmlFor="phone"
+                      className="block text-sm font-medium text-foreground mb-2"
+                    >
                       Телефон
                     </label>
                     <Input
@@ -151,7 +184,10 @@ const ContactForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
+                    <label
+                      htmlFor="message"
+                      className="block text-sm font-medium text-foreground mb-2"
+                    >
                       Комментарий
                     </label>
                     <Textarea
@@ -165,12 +201,18 @@ const ContactForm = () => {
                     />
                   </div>
 
-                  <Button type="submit" variant="hero" size="lg" className="w-full hover:shadow-glow-lime hover:border hover:border-lime/50">
+                  <Button
+                    type="submit"
+                    variant="hero"
+                    size="lg"
+                    className="w-full hover:shadow-glow-lime hover:border hover:border-lime/50"
+                  >
                     Отправить заявку
                   </Button>
 
                   <p className="text-xs text-muted-foreground text-center">
-                    Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
+                    Нажимая кнопку, вы соглашаетесь с политикой
+                    конфиденциальности
                   </p>
                 </div>
               </form>
